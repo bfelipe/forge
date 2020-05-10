@@ -182,6 +182,7 @@ install_digital_art_tools() {
 
 # Art tools
 install_digital_art_tools
+clear
 
 install_google_cloud_sdk() {
     read -p "Do you wish to install Amazon CLI? (y/n) " GCLOUD_INSTALL_BOOL
@@ -294,7 +295,7 @@ docker run -it -p 5672:5672 -d --hostname developmentmq --name rabbit-service ra
 
 #NATS Streaming
 #https://hub.docker.com/_/nats-streaming
-docker run -it -p 4222:4222-p 8222:8222 -d --name nats-service nats-streaming
+docker run -it -p 4222:4222 -p 8222:8222 -d --name nats-service nats-streaming
 
 #EMQ
 #https://hub.docker.com/r/emqx/emqx
