@@ -28,7 +28,9 @@ clear
 
 # Development Workspace
 read -p "Please enter the path directory where your projects will gonna live: " DEV_PATH
-mkdir $DEV_PATH/dev $DEV_PATH/dev/ops 
+mkdir $DEV_PATH/dev $DEV_PATH/dev/ops
+read -p "Please enter the path directory where your third party tools will be installed: " TOOLS_PATH
+mkdir $TOOLS_PATH/tools
 
 # Microsoft Visual Code
 sudo snap install --classic code
@@ -78,6 +80,9 @@ mkdir $DEV_PATH/dev/c++
 install_clang
 sudo snap install clion --classic
 
+# CMake
+sudo snap install cmake --classic
+
 # Golang Env
 mkdir $DEV_PATH/dev/go $DEV_PATH/dev/go/src $DEV_PATH/dev/go/src/github\.com
 sudo snap install go --classic
@@ -91,10 +96,9 @@ install_unity_development_env() {
     if [ $UNITY_INSTALL_BOOL == "y" ]
     then
         mkdir $DEV_PATH/dev/unity
-        sudo mkidr /opt/unity
-        wget -c https://public-cdn.cloud.unity3d.com/hub/prod/UnityHub.AppImage -P /tmp
-        chmod +x /tmp/UnityHub.AppImage
-        sudo mv /tmp/UnityHub.AppImage /opt/unity
+        mkdir $TOOLS_PATH/tools/unity-hub
+        wget -c https://public-cdn.cloud.unity3d.com/hub/prod/UnityHub.AppImage -P $TOOLS_PATH/tools/unity-hub
+        chmod +x $TOOLS_PATH/tools/unity-hub/UnityHub.AppImage
     elif [ $UNITY_INSTALL_BOOL == "n" ]
     then
         echo "Aborting Unity installation."
@@ -185,7 +189,7 @@ install_digital_art_tools
 clear
 
 install_google_cloud_sdk() {
-    read -p "Do you wish to install Amazon CLI? (y/n) " GCLOUD_INSTALL_BOOL
+    read -p "Do you wish to install Google Cloud SDK? (y/n) " GCLOUD_INSTALL_BOOL
     if [ $GCLOUD_INSTALL_BOOL == "y" ]
     then
         sudo snap install google-cloud-sdk --classic
@@ -231,7 +235,7 @@ sudo snap install authy --beta
 
 # Serverless Framework
 # https://serverless.com
-curl -o- -L https://slss.io/install | bash
+npm install -g serverless
 clear
 
 install_draw_io_tool() {
