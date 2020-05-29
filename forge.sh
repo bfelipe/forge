@@ -76,7 +76,7 @@ install_clang() {
 }
 
 # C++ Env
-mkdir $DEV_PATH/dev/c++
+mkdir $DEV_PATH/dev/cpp
 install_clang
 sudo snap install clion --classic
 
@@ -143,12 +143,51 @@ clear
 # Game development with Unity
 install_unity_development_env
 
-# Google Chrome
-wget -c https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -P /tmp
-sudo dpkg -i /tmp/google-chrome-stable_current_amd64.deb
-sudo rm /tmp/google-chrome-stable_current_amd64.deb
-sudo apt install --fix-broken -y
-sudo apt autoremove -y
+install_google_chrome() {
+	wget -c https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -P /tmp
+	sudo dpkg -i /tmp/google-chrome-stable_current_amd64.deb
+	sudo rm /tmp/google-chrome-stable_current_amd64.deb
+	sudo apt install --fix-broken -y
+	sudo apt autoremove -y
+}
+
+install_brave_browser() {
+	sudo apt install apt-transport-https curl
+	curl -s https://brave-browser-apt-release.s3.brave.com/brave-core.asc |\
+	 sudo apt-key --keyring /etc/apt/trusted.gpg.d/brave-browser-release.gpg add -
+	echo "deb [arch=amd64] https://brave-browser-apt-release.s3.brave.com/ stable main" \
+	| sudo tee /etc/apt/sources.list.d/brave-browser-release.list
+	sudo apt update
+	sudo apt install brave-browser -y
+}
+
+install_chrome_based_browser() {
+	read -p "Do you wish to install a chrome based browser? (y/n) " BROWSER_INSTALL_BOOL
+	if [ $BROWSER_INSTALL_BOOL == "y" ]
+	then
+		echo "Select the number option for the browser you wish to install."
+		read -p "1 - Google Chrome	2 - Brave " BROWSER_CHOICE
+		if [ $BROWSER_CHOICE == 1 ]
+		then
+			install_google_chrome
+		elif [ $BROWSER_CHOICE == 2 ]
+		then
+			install_brave_browser
+		else
+			echo "Invalid option."
+			install_chrome_based_browser
+		fi
+	elif [ $BROWSER_INSTALL_BOOL == "n" ]
+	then
+		echo "Aborting Chrome based browser installation."
+	else
+		echo "Invalid option."
+		install_chrome_based_browser
+	fi
+}
+
+# Chrome Based Browsers
+install_chrome_based_browser
 
 # Proton VPN
 sudo pip3 install protonvpn-cli
@@ -173,7 +212,7 @@ install_digital_art_tools() {
     if [ $ART_TOOLS_INSTALL_BOOL == "y" ]
     then
         sudo snap install krita
-        sudo apt-get install mypaint -y
+        #sudo apt-get install mypaint -y
         sudo snap install blender --classic
     elif [ $ART_TOOLS_INSTALL_BOOL == "n" ]
     then
@@ -242,9 +281,7 @@ install_draw_io_tool() {
     read -p "Do you wish to install Draw io tool? (y/n) " DRAW_IO_INSTALL_BOOL
     if [ $DRAW_IO_INSTALL_BOOL == "y" ]
     then
-        wget -c https://github.com/jgraph/drawio-desktop/releases/download/v12.6.5/draw.io-amd64-12.6.5.deb -P /tmp
-        sudo dpkg -i /tmp/draw.io-amd64-12.6.5.deb
-        sudo rm /tmp/draw.io-amd64-12.6.5.deb
+	sudo snap install drawio
     elif [ $DRAW_IO_INSTALL_BOOL == "n" ]
     then
         echo "Aborting Draw IO installation."
@@ -256,6 +293,12 @@ install_draw_io_tool() {
 
 # Draw IO Tool
 install_draw_io_tool
+
+# Discord
+wget -c https://discord.com/api/download?platform=linux&format=deb -P /tmp
+sudo mv /tmp/download?platform=linux&format=deb /tmp/discord.deb
+sudo dpkg -i /tmp/discord.deb
+sudo apt --fix-broken install -y
 
 # Docker
 sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common -y
