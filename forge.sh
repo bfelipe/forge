@@ -8,6 +8,7 @@ sudo apt-get install build-essential -y
 
 # Misc
 sudo apt-get install gnome-tweaks -y
+sudo apt-get install totem -y
 sudo apt-get install curl -y
 sudo apt-get install tmux -y
 sudo apt-get install transmission transmission-gtk -y
