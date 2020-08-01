@@ -10,7 +10,8 @@ sudo apt-get install build-essential -y
 sudo apt-get install gnome-tweaks -y
 sudo apt-get install totem -y
 sudo apt-get install curl -y
-sudo apt-get install tmux -y
+#sudo apt-get install tmux -y
+sudo apt-get install terminator -y
 sudo apt-get install transmission transmission-gtk -y
 sudo apt-get install openvpn dialog -y
 sudo apt-get install net-tools -y
@@ -56,9 +57,16 @@ clear
 
 # Java Env
 mkdir $DEV_PATH/dev/java
+curl -s "https://get.sdkman.io" | bash
+source "$HOME/.sdkman/bin/sdkman-init.sh"
+sdk version
+sdk list java
 read -p "Please enter the JDK version you wish to install: " JDK_VER
-sudo apt-get install openjdk-$JDK_VER-jdk openjdk-$JDK_VER-jre -y
-sudo apt-get install maven -y
+sdk install java $JDK_VER
+sdk install maven
+sdk list gradle
+read -p "Please enter the Gradle version you wish to install: " GRADLE_VER
+sdk install gradle $GRADLE_VER
 sudo snap install intellij-idea-community --classic
 clear
 
@@ -214,7 +222,7 @@ install_digital_art_tools() {
     then
         sudo snap install krita
         #sudo apt-get install mypaint -y
-        sudo snap install blender --classic
+        #sudo snap install blender --classic
     elif [ $ART_TOOLS_INSTALL_BOOL == "n" ]
     then
         echo "Aborting art tools installation."
@@ -264,14 +272,12 @@ clear
 install_amazon_cli
 
 #DBeaver
-sudo snap install dbeaver-ce
+#sudo snap install dbeaver-ce
+#clear
+
+# DataGrip
+sudo snap install datagrip --classic
 clear
-
-# Bitwarden
-sudo snap install bitwarden
-
-#Authy
-sudo snap install authy --beta
 
 # Serverless Framework
 # https://serverless.com
@@ -294,12 +300,6 @@ install_draw_io_tool() {
 
 # Draw IO Tool
 install_draw_io_tool
-
-# Discord
-wget -c https://discord.com/api/download?platform=linux&format=deb -P /tmp
-sudo mv /tmp/download?platform=linux&format=deb /tmp/discord.deb
-sudo dpkg -i /tmp/discord.deb
-sudo apt --fix-broken install -y
 
 # Docker
 sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common -y
@@ -356,7 +356,7 @@ docker pull kibana:7.7.0
 docker run -it -d --name kibana -p 5601:5601 kibana
 
 #Jupyter
-docker run -it -d -p 8888:8888 --name jupyter jupyter/datascience-notebook
+#docker run -it -d -p 8888:8888 --name jupyter jupyter/datascience-notebook
 
 GROUP_SUBSHELL
 
