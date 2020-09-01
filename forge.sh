@@ -51,9 +51,9 @@ clear
 
 # Nodejs
 mkdir $DEV_PATH/dev/js
-read -p "Please enter the Nodejs version you wish to install: " NODE_VER
-sudo snap install node --channel=$NODE_VER/stable --classic
-clear
+#read -p "Please enter the Nodejs version you wish to install: " NODE_VER
+#sudo snap install node --channel=$NODE_VER/stable --classic
+#clear
 
 # Java Env
 mkdir $DEV_PATH/dev/java
@@ -207,6 +207,7 @@ sudo snap install postman
 # Virtual Box
 sudo apt-get install virtualbox virtualbox-ext-pack virtualbox-guest-additions-iso -y
 sudo apt-get install virtualbox-dkms virtualbox-guest-dkms -y
+sudo adduser $USER vboxusers
 
 # VLC
 sudo snap install vlc
@@ -281,7 +282,7 @@ clear
 
 # Serverless Framework
 # https://serverless.com
-npm install -g serverless
+#npm install -g serverless
 clear
 
 install_draw_io_tool() {
@@ -306,7 +307,7 @@ sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent softwa
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository \
    "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-   focal \
+   $(lbs_release -cs) \
    stable"
 sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io -y
