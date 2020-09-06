@@ -10,7 +10,6 @@ sudo apt-get install build-essential -y
 sudo apt-get install gnome-tweaks -y
 sudo apt-get install totem -y
 sudo apt-get install curl -y
-#sudo apt-get install tmux -y
 sudo apt-get install terminator -y
 sudo apt-get install transmission transmission-gtk -y
 sudo apt-get install openvpn dialog -y
@@ -18,6 +17,7 @@ sudo apt-get install net-tools -y
 sudo apt-get install tig -y
 sudo apt-get install apt-transport-https -y
 sudo apt-get install gnupg ca-certificates -y
+sudo apt-get install lsb-core -y
 clear
 
 # Git
@@ -29,10 +29,31 @@ git config --global user.email "\"$GIT_EMAIL"\"
 clear
 
 # Development Workspace
-read -p "Please enter the path directory where your projects will gonna live: " DEV_PATH
-mkdir $DEV_PATH/dev $DEV_PATH/dev/ops
-read -p "Please enter the path directory where your third party tools will be installed: " TOOLS_PATH
-mkdir $TOOLS_PATH/tools
+set_dev_environment() {
+    read -p "Please enter the path directory where your projects will gonna live: " DEV_PATH
+    read -p "Please enter the path directory where your third party tools will be installed: " TOOLS_PATH
+}
+
+new_dev_env() {
+    set_dev_environment
+    echo "Your code will gonna be kept at: $DEV_PATH/dev"
+    echo "Your tools will gonna be kept at: $TOOLS_PATH/tools"
+    read -p "Do you wish to proceed with the creation of these directories (y/n) " DEV_ENV_CHOICE
+        if [ $DEV_ENV_CHOICE == "y" ]
+        then
+            mkdir $DEV_PATH/dev $DEV_PATH/dev/ops
+            mkdir $TOOLS_PATH/tools
+        elif [ $DEV_ENV_CHOICE == "n" ]
+        then
+            echo "Aborting dev env creation."
+        else
+            echo "Invalid option."
+            new_dev_env
+        fi    
+}
+
+new_dev_env
+clear
 
 # Microsoft Visual Code
 sudo snap install --classic code
@@ -51,9 +72,10 @@ clear
 
 # Nodejs
 mkdir $DEV_PATH/dev/js
-#read -p "Please enter the Nodejs version you wish to install: " NODE_VER
-#sudo snap install node --channel=$NODE_VER/stable --classic
-#clear
+read -p "Please enter the Nodejs version you wish to install: " NODE_VER
+curl -sL https://deb.nodesource.com/setup_$NODE_VER.x | sudo -E bash -
+sudo apt-get update && apt-get install -y nodejs
+clear
 
 # Java Env
 mkdir $DEV_PATH/dev/java
@@ -222,8 +244,7 @@ install_digital_art_tools() {
     if [ $ART_TOOLS_INSTALL_BOOL == "y" ]
     then
         sudo snap install krita
-        #sudo apt-get install mypaint -y
-        #sudo snap install blender --classic
+        sudo snap install blender --classic
     elif [ $ART_TOOLS_INSTALL_BOOL == "n" ]
     then
         echo "Aborting art tools installation."
@@ -251,38 +272,39 @@ install_google_cloud_sdk() {
     fi
 }
 
-install_amazon_cli() {
-    read -p "Do you wish to install Amazon CLI? (y/n) " AWS_CLI_INSTALL_BOOL
-    if [ $AWS_CLI_INSTALL_BOOL == "y" ]
-    then
-        sudo snap install aws-cli --classic
-    elif [ $AWS_CLI_INSTALL_BOOL == "n" ]
-    then
-        echo "Aborting Amazon CLI installation."
-    else
-        echo "Invalid option."
-        install_amazon_cli
-    fi
-}
+# Deprecated
+# install_amazon_cli() {
+#     read -p "Do you wish to install Amazon CLI? (y/n) " AWS_CLI_INSTALL_BOOL
+#     if [ $AWS_CLI_INSTALL_BOOL == "y" ]
+#     then
+#         sudo snap install aws-cli --classic
+#     elif [ $AWS_CLI_INSTALL_BOOL == "n" ]
+#     then
+#         echo "Aborting Amazon CLI installation."
+#     else
+#         echo "Invalid option."
+#         install_amazon_cli
+#     fi
+# }
 
 # Google Cloud SDK
 install_google_cloud_sdk
 clear
 
 # Amazon CLI
-install_amazon_cli
+# install_amazon_cli
 
 #DBeaver
-#sudo snap install dbeaver-ce
-#clear
+sudo snap install dbeaver-ce
+clear
 
 # DataGrip
-sudo snap install datagrip --classic
-clear
+# sudo snap install datagrip --classic
+# clear
 
 # Serverless Framework
 # https://serverless.com
-#npm install -g serverless
+sudo npm install serverless -g
 clear
 
 install_draw_io_tool() {
@@ -307,7 +329,7 @@ sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent softwa
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository \
    "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-   $(lbs_release -cs) \
+   $(lsb_release -cs) \
    stable"
 sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io -y
