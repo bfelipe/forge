@@ -18,6 +18,7 @@ sudo apt-get install net-tools -y
 sudo apt-get install tig -y
 sudo apt-get install apt-transport-https -y
 sudo apt-get install gnupg ca-certificates -y
+sudo apt-get install lsb-core -y
 clear
 
 # Git
@@ -51,9 +52,10 @@ clear
 
 # Nodejs
 mkdir $DEV_PATH/dev/js
-#read -p "Please enter the Nodejs version you wish to install: " NODE_VER
-#sudo snap install node --channel=$NODE_VER/stable --classic
-#clear
+read -p "Please enter the Nodejs version you wish to install: " NODE_VER
+curl -sL https://deb.nodesource.com/setup_$NODE_VER.x | sudo -E bash -
+sudo apt-get update && apt-get install -y nodejs
+clear
 
 # Java Env
 mkdir $DEV_PATH/dev/java
@@ -282,7 +284,7 @@ clear
 
 # Serverless Framework
 # https://serverless.com
-#npm install -g serverless
+sudo npm install serverless -g
 clear
 
 install_draw_io_tool() {
@@ -307,7 +309,7 @@ sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent softwa
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository \
    "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-   $(lbs_release -cs) \
+   $(lsb_release -cs) \
    stable"
 sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io -y
