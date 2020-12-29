@@ -174,51 +174,13 @@ clear
 # Game development with Unity
 install_unity_development_env
 
-install_google_chrome() {
-	wget -c https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -P /tmp
-	sudo dpkg -i /tmp/google-chrome-stable_current_amd64.deb
-	sudo rm /tmp/google-chrome-stable_current_amd64.deb
-	sudo apt install --fix-broken -y
-	sudo apt autoremove -y
-}
+# Google chrome
+wget -c https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -P /tmp
+sudo dpkg -i /tmp/google-chrome-stable_current_amd64.deb
+sudo rm /tmp/google-chrome-stable_current_amd64.deb
+sudo apt install --fix-broken -y
+sudo apt autoremove -y
 
-install_brave_browser() {
-	sudo apt install apt-transport-https curl
-	curl -s https://brave-browser-apt-release.s3.brave.com/brave-core.asc |\
-	 sudo apt-key --keyring /etc/apt/trusted.gpg.d/brave-browser-release.gpg add -
-	echo "deb [arch=amd64] https://brave-browser-apt-release.s3.brave.com/ stable main" \
-	| sudo tee /etc/apt/sources.list.d/brave-browser-release.list
-	sudo apt update
-	sudo apt install brave-browser -y
-}
-
-install_chrome_based_browser() {
-	read -p "Do you wish to install a chrome based browser? (y/n) " BROWSER_INSTALL_BOOL
-	if [ $BROWSER_INSTALL_BOOL == "y" ]
-	then
-		echo "Select the number option for the browser you wish to install."
-		read -p "1 - Google Chrome	2 - Brave " BROWSER_CHOICE
-		if [ $BROWSER_CHOICE == 1 ]
-		then
-			install_google_chrome
-		elif [ $BROWSER_CHOICE == 2 ]
-		then
-			install_brave_browser
-		else
-			echo "Invalid option."
-			install_chrome_based_browser
-		fi
-	elif [ $BROWSER_INSTALL_BOOL == "n" ]
-	then
-		echo "Aborting Chrome based browser installation."
-	else
-		echo "Invalid option."
-		install_chrome_based_browser
-	fi
-}
-
-# Chrome Based Browsers
-install_chrome_based_browser
 
 # Proton VPN
 sudo pip3 install protonvpn-cli
