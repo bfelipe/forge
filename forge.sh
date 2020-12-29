@@ -356,10 +356,6 @@ docker run -it -p 3360:3360 --name mysql-service -e MYSQL_ROOT_PASSWORD=root -d 
 sudo apt-get install mysql-client -y
 # sudo apt-get install mysql-workbench -y
 
-# DynamoDB
-# https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.UsageNotes.html
-docker run -it -p 54557:54557 --name dynamo-service -d amazon/dynamodb-local
-
 #RabbitMQ
 https://hub.docker.com/_/rabbitmq
 docker run -it -p 5672:5672 -d --hostname developmentmq --name rabbit-service rabbitmq:3
