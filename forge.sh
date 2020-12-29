@@ -238,26 +238,6 @@ sudo snap install vlc
 sudo snap install spotify
 clear
 
-install_digital_art_tools() {
-    echo "Some digital tools are available such as krita, my paint, blender."
-    read -p "Do you wish to install digital art tool? (y/n) " ART_TOOLS_INSTALL_BOOL
-    if [ $ART_TOOLS_INSTALL_BOOL == "y" ]
-    then
-        sudo snap install krita
-        sudo snap install blender --classic
-    elif [ $ART_TOOLS_INSTALL_BOOL == "n" ]
-    then
-        echo "Aborting art tools installation."
-    else
-        echo "Invalid option."
-        install_digital_art_tools
-    fi
-}
-
-# Art tools
-install_digital_art_tools
-clear
-
 #DBeaver
 sudo snap install dbeaver-ce
 clear
