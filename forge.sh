@@ -381,6 +381,9 @@ docker run -it -d --name kibana -p 5601:5601 kibana
 #Jupyter
 #docker run -it -d -p 8888:8888 --name jupyter jupyter/datascience-notebook
 
+# Postgres
+docker run --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=admin -d postgres:11.2
+
 GROUP_SUBSHELL
 
 # Colour output schema
