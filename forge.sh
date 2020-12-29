@@ -298,10 +298,6 @@ clear
 sudo snap install dbeaver-ce
 clear
 
-# DataGrip
-# sudo snap install datagrip --classic
-# clear
-
 # Serverless Framework
 # https://serverless.com
 sudo npm install serverless -g
