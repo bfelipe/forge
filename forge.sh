@@ -258,42 +258,6 @@ install_digital_art_tools() {
 install_digital_art_tools
 clear
 
-install_google_cloud_sdk() {
-    read -p "Do you wish to install Google Cloud SDK? (y/n) " GCLOUD_INSTALL_BOOL
-    if [ $GCLOUD_INSTALL_BOOL == "y" ]
-    then
-        sudo snap install google-cloud-sdk --classic
-    elif [ $GCLOUD_INSTALL_BOOL == "n" ]
-    then
-        echo "Aborting Google Cloud SDK installation."
-    else
-        echo "Invalid option."
-        install_google_cloud_sdk
-    fi
-}
-
-# Deprecated
-# install_amazon_cli() {
-#     read -p "Do you wish to install Amazon CLI? (y/n) " AWS_CLI_INSTALL_BOOL
-#     if [ $AWS_CLI_INSTALL_BOOL == "y" ]
-#     then
-#         sudo snap install aws-cli --classic
-#     elif [ $AWS_CLI_INSTALL_BOOL == "n" ]
-#     then
-#         echo "Aborting Amazon CLI installation."
-#     else
-#         echo "Invalid option."
-#         install_amazon_cli
-#     fi
-# }
-
-# Google Cloud SDK
-install_google_cloud_sdk
-clear
-
-# Amazon CLI
-# install_amazon_cli
-
 #DBeaver
 sudo snap install dbeaver-ce
 clear
