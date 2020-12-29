@@ -209,6 +209,12 @@ clear
 sudo npm install serverless -g
 clear
 
+# Amazon CLI
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+aws --version
+
 install_draw_io_tool() {
     read -p "Do you wish to install Draw io tool? (y/n) " DRAW_IO_INSTALL_BOOL
     if [ $DRAW_IO_INSTALL_BOOL == "y" ]
