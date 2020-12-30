@@ -288,6 +288,11 @@ docker run -it -d --name kibana -p 5601:5601 kibana
 # Postgres
 docker run --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=admin -d postgres:11.2
 
+# Keycloak
+docker run -p 9080:8080 -d --name keycloak jboss/keycloak
+docker exec keycloak /opt/jboss/keycloak/bin/add-user-keycloak.sh -u admin -p admin
+docker restart keycloak
+
 GROUP_SUBSHELL
 
 # Colour output schema
