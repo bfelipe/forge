@@ -53,18 +53,13 @@ Some packages will gonna ask you to type your password. It is because it require
 - Mono Development
 - Rider
 - Google Chrome
-- Brave Browser
 - Proton VPN Cli
 - Postman
 - Virtual box
 - VLC
 - Spotify
-- Krita
-- Blender
-- Google Cloud SDK
-- Amazon CLI >> REMOVED
+- Amazon CLI
 - Dbeaver
-- Datagrip >> REMOVED
 - Serverless framework
 - Draw IO
 - Docker
@@ -75,12 +70,13 @@ Some packages will gonna ask you to type your password. It is because it require
 - MongoDB clients
 - Docker::MySQL
 - MySQL Workbench
-- Docker::DynamoDB
 - Docker::RabbitMQ
 - Docker::NATS Streaming
 - Docker::EMQX
 - Docker::Kibana
 - Docker::Jupyter
+- Docker::Postgres
+- Docker::Keycloak
 
 ## Author
 
