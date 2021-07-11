@@ -122,65 +122,12 @@ sudo sed -i "\$a export GOPATH=\$DEV_PATH/dev/go" /etc/profile
 sudo snap install goland --classic
 clear
 
-install_unity_development_env() {
-    read -p "Do you wish to install Unity engine? (y/n) " UNITY_INSTALL_BOOL
-    if [ $UNITY_INSTALL_BOOL == "y" ]
-    then
-        mkdir $DEV_PATH/dev/unity
-        mkdir $TOOLS_PATH/tools/unity-hub
-        wget -c https://public-cdn.cloud.unity3d.com/hub/prod/UnityHub.AppImage -P $TOOLS_PATH/tools/unity-hub
-        chmod +x $TOOLS_PATH/tools/unity-hub/UnityHub.AppImage
-    elif [ $UNITY_INSTALL_BOOL == "n" ]
-    then
-        echo "Aborting Unity installation."
-    else
-        echo "Invalid option."
-        install_unity_development_env
-    fi
-}
-
-install_dot_net_env() {
-    read -p "Do you wish to install .Net Core SDK? (y/n) " NET_INSTALL_BOOL
-    if [ $NET_INSTALL_BOOL == "y" ]
-    then
-        mkdir $DEV_PATH/dev/csharp
-        # .Net Core SDK
-        # https://docs.microsoft.com/en-us/dotnet/core/install/linux-package-manager-ubuntu-1910 
-        # removed -O packages-microsoft-prod.deb
-        wget -c https://packages.microsoft.com/config/ubuntu/19.10/packages-microsoft-prod.deb -P /tmp
-        sudo dpkg -i /tmp/packages-microsoft-prod.deb
-        sudo apt-get update
-        sudo dpkg --purge packages-microsoft-prod && sudo dpkg -i /tmp/packages-microsoft-prod.deb
-        sudo apt-get update
-        sudo apt-get install dotnet-sdk-3.1
-        sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
-        echo "deb https://download.mono-project.com/repo/ubuntu stable-bionic main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
-        sudo apt update
-        sudo apt install mono-devel -y
-        sudo snap install rider --classic
-    elif [ $NET_INSTALL_BOOL == "n" ]
-    then
-        echo "Aborting .Net Core SDK installation."
-    else
-        echo "Invalid option."
-        install_dot_net_env
-    fi
-}
-
-# dot Net Env
-install_dot_net_env
-clear
-
-# Game development with Unity
-install_unity_development_env
-
 # Google chrome
 wget -c https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -P /tmp
 sudo dpkg -i /tmp/google-chrome-stable_current_amd64.deb
 sudo rm /tmp/google-chrome-stable_current_amd64.deb
 sudo apt install --fix-broken -y
 sudo apt autoremove -y
-
 
 # Proton VPN
 sudo pip3 install protonvpn-cli
