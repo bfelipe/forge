@@ -88,6 +88,9 @@ sdk install java $JDK_VER
 sdk list gradle
 read -p "Please enter the Gradle version you wish to install: " GRADLE_VER
 sdk install gradle $GRADLE_VER
+sdk list kotlin
+read -p "Please enter the Kotlin version you wish to install: " KOTLIN_VER
+sdk install kotlin $KOTLIN_VER
 sudo snap install intellij-idea-community --classic
 clear
 
