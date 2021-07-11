@@ -85,7 +85,6 @@ sdk version
 sdk list java
 read -p "Please enter the JDK version you wish to install: " JDK_VER
 sdk install java $JDK_VER
-sdk install maven
 sdk list gradle
 read -p "Please enter the Gradle version you wish to install: " GRADLE_VER
 sdk install gradle $GRADLE_VER
