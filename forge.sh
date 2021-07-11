@@ -196,10 +196,6 @@ sudo adduser $USER vboxusers
 # VLC
 sudo snap install vlc
 
-# Spotify
-sudo snap install spotify
-clear
-
 #DBeaver
 sudo snap install dbeaver-ce
 clear
@@ -268,7 +264,6 @@ sudo apt-get install mysql-client -y
 # default_user: guest default_pass: guest
 #https://hub.docker.com/_/rabbitmq
 docker run -it -p 5672:5672 -p 15672:15672 -d --name rabbit-service rabbitmq:3-management
-
 
 #NATS Streaming
 #https://hub.docker.com/_/nats-streaming
