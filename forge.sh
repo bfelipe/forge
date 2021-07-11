@@ -278,12 +278,6 @@ docker run -it -p 4222:4222 -p 8222:8222 -d --name nats-service nats-streaming
 #https://hub.docker.com/r/emqx/emqx
 docker run -it --name emqx-service -p 18083:18083 -p 1883:1883 -d emqx/emqx:latest
 
-#Kibana
-#https://hub.docker.com/_/kibana
-# docker run -d --name kibana --net somenetwork -p 5601:5601 kibana:tag
-docker pull kibana:7.7.0
-docker run -it -d --name kibana -p 5601:5601 kibana
-
 #Jupyter
 #docker run -it -d -p 8888:8888 --name jupyter jupyter/datascience-notebook
 
