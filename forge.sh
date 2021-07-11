@@ -264,9 +264,11 @@ docker run -it -p 3360:3360 --name mysql-service -e MYSQL_ROOT_PASSWORD=root -d 
 sudo apt-get install mysql-client -y
 # sudo apt-get install mysql-workbench -y
 
-#RabbitMQ
-https://hub.docker.com/_/rabbitmq
-docker run -it -p 5672:5672 -d --hostname developmentmq --name rabbit-service rabbitmq:3
+# RabbitMQ
+# default_user: guest default_pass: guest
+#https://hub.docker.com/_/rabbitmq
+docker run -it -p 5672:5672 -p 15672:15672 -d --name rabbit-service rabbitmq:3-management
+
 
 #NATS Streaming
 #https://hub.docker.com/_/nats-streaming
