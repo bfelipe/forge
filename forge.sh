@@ -237,6 +237,9 @@ docker run -p 9080:8080 -d --name keycloak jboss/keycloak
 docker exec keycloak /opt/jboss/keycloak/bin/add-user-keycloak.sh -u admin -p admin
 docker restart keycloak
 
+# Kafka
+docker run -it -p 9092:9092 -d --name kafka-service spotify/kafka
+
 GROUP_SUBSHELL
 
 # Colour output schema
