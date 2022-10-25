@@ -41,7 +41,7 @@ new_dev_env() {
     read -p "Do you wish to proceed with the creation of these directories (y/n) " DEV_ENV_CHOICE
         if [ $DEV_ENV_CHOICE == "y" ]
         then
-            mkdir $DEV_PATH/dev $DEV_PATH/dev/ops
+            mkdir $DEV_PATH/dev
             mkdir $TOOLS_PATH/tools
         elif [ $DEV_ENV_CHOICE == "n" ]
         then
@@ -59,46 +59,109 @@ clear
 sudo snap install --classic code
 
 # Python Env and Tools
-mkdir $DEV_PATH/dev/python
-sudo apt-get install python3-pip -y
-sudo apt-get install python3-venv -y
-sudo apt-get install python3-setuptools -y
-sudo apt-get install python-apt python3-apt -y
-sed -i "\$a alias python='python3'" ~/.bashrc
-sed -i "\$a alias pip='pip3'" ~/.bashrc
-source ~/.bashrc
-sudo snap install pycharm-community --classic
+install_python_tools() {
+    read -p "Do you wish to install python additional tools? (y/n) " PYTHON_INSTALL_BOOL
+    if [ $PYTHON_INSTALL_BOOL == "y" ]
+    then
+        mkdir $DEV_PATH/dev/python
+        sudo apt-get install python3-pip -y
+        sudo apt-get install python3-venv -y
+        sudo apt-get install python3-setuptools -y
+        sudo apt-get install python3-apt -y
+        sed -i "\$a alias python='python3'" ~/.bashrc
+        sed -i "\$a alias pip='pip3'" ~/.bashrc
+        source ~/.bashrc
+        sudo snap install pycharm-community --classic
+    elif [ $PYTHON_INSTALL_BOOL == "n" ]
+    then
+        echo "Aborting python tools installation."
+    else
+        echo "Invalid option."
+        install_python_tools
+    fi
+}
+
+install_python_tools
 clear
 
+
+# Serverless Framework
+# https://serverless.com
+install_serverless() {
+    read -p "Do you wish to install serverless? (y/n) " SERVERLESS_INSTALL_BOOL
+    if [ $SERVERLESS_INSTALL_BOOL == "y" ]
+    then
+        sudo npm install serverless -g
+    elif [ $SERVERLESS_INSTALL_BOOL == "n" ]
+    then
+        echo "Aborting serverless installation."
+    else
+        echo "Invalid option."
+        install_serverless
+    fi
+}
+
 # Nodejs
-mkdir $DEV_PATH/dev/js
-read -p "Please enter the Nodejs version you wish to install: " NODE_VER
-curl -sL https://deb.nodesource.com/setup_$NODE_VER.x | sudo -E bash -
-sudo apt-get update && apt-get install -y nodejs
+install_nodejs() {
+    read -p "Do you wish to install node js? (y/n) " NODE_INSTALL_BOOL
+    if [ $NODE_INSTALL_BOOL == "y" ]
+    then
+        mkdir $DEV_PATH/dev/js
+        read -p "Please enter the Nodejs version you wish to install: " NODE_VER
+        curl -sL https://deb.nodesource.com/setup_$NODE_VER.x | sudo -E bash -
+        sudo apt-get update && apt-get install -y nodejs
+        install_serverless
+    elif [ $NODE_INSTALL_BOOL == "n" ]
+    then
+        echo "Aborting node js installation."
+    else
+        echo "Invalid option."
+        install_nodejs
+    fi
+}
+
+install_nodejs
 clear
 
 # Java Env
-mkdir $DEV_PATH/dev/java
-curl -s "https://get.sdkman.io" | bash
-source "$HOME/.sdkman/bin/sdkman-init.sh"
-sdk version
-sdk list java
-read -p "Please enter the JDK version you wish to install: " JDK_VER
-sdk install java $JDK_VER
-sdk install maven
-sdk list gradle
-read -p "Please enter the Gradle version you wish to install: " GRADLE_VER
-sdk install gradle $GRADLE_VER
-sdk list kotlin
-read -p "Please enter the Kotlin version you wish to install: " KOTLIN_VER
-sdk install kotlin $KOTLIN_VER
-sudo snap install intellij-idea-community --classic
+install_java_env() {
+    read -p "Do you wish to install java environment? (y/n) " JAVA_INSTALL_BOOL
+    if [ $JAVA_INSTALL_BOOL == "y" ]
+    then
+        mkdir $DEV_PATH/dev/java
+        curl -s "https://get.sdkman.io" | bash
+        source "$HOME/.sdkman/bin/sdkman-init.sh"
+        sdk version
+        sdk list java
+        read -p "Please enter the JDK version you wish to install: " JDK_VER
+        sdk install java $JDK_VER
+        sdk install maven
+        sdk list gradle
+        read -p "Please enter the Gradle version you wish to install: " GRADLE_VER
+        sdk install gradle $GRADLE_VER
+        sdk list kotlin
+        read -p "Please enter the Kotlin version you wish to install: " KOTLIN_VER
+        sdk install kotlin $KOTLIN_VER
+        sudo snap install intellij-idea-community --classic
+    elif [ $JAVA_INSTALL_BOOL == "n" ]
+    then
+        echo "Aborting java installation."
+    else
+        echo "Invalid option."
+        install_java_env
+    fi
+}
+
+install_java_env
 clear
 
+# C++ Env
 install_clang() {
     read -p "Do you wish to install clang compiler? (y/n) " CLANG_INSTALL_BOOL
     if [ $CLANG_INSTALL_BOOL == "y" ]
     then
+        mkdir $DEV_PATH/dev/cpp
+        sudo snap install cmake --classic
         sudo apt-get install clang -y
     elif [ $CLANG_INSTALL_BOOL == "n" ]
     then
@@ -109,20 +172,30 @@ install_clang() {
     fi
 }
 
-# C++ Env
-mkdir $DEV_PATH/dev/cpp
 install_clang
-sudo snap install clion --classic
-
-# CMake
-sudo snap install cmake --classic
+clear
 
 # Golang Env
-mkdir $DEV_PATH/dev/go $DEV_PATH/dev/go/src $DEV_PATH/dev/go/src/github\.com
-sudo snap install go --classic
-sudo sed -i "\$a export PATH=\$PATH:/snap/go/current/bin" /etc/profile
-sudo sed -i "\$a export GOPATH=\$DEV_PATH/dev/go" /etc/profile
-sudo snap install goland --classic
+install_go() {
+    read -p "Do you wish to install go compiler? (y/n) " GO_INSTALL_BOOL
+    if [ $GO_INSTALL_BOOL == "y" ]
+    then
+        mkdir $DEV_PATH/dev/go
+        read -p "Please enter the Go version you wish to install: " GO_VER
+        wget -c "https://golang.google.cn/dl/go$GO_VER.linux-amd64.tar.gz" -P /tmp
+        sudo tar -C /usr/local -xzf /tmp/go$GO_VER.linux-amd64.tar.gz
+        sudo sed -i "\$a export PATH=\$PATH:/usr/local/go/bin" /etc/profile
+        sudo rm /tmp/go$GO_VER.linux-amd64.tar.gz
+    elif [ $GO_INSTALL_BOOL == "n" ]
+    then
+        echo "Aborting Go installation."
+    else
+        echo "Invalid option."
+        install_go
+    fi
+}
+
+install_go
 clear
 
 # Google chrome
@@ -132,9 +205,6 @@ sudo rm /tmp/google-chrome-stable_current_amd64.deb
 sudo apt install --fix-broken -y
 sudo apt autoremove -y
 
-# Proton VPN
-sudo pip3 install protonvpn-cli
-
 # Postman
 sudo snap install postman
 
@@ -143,24 +213,10 @@ sudo apt-get install virtualbox virtualbox-ext-pack virtualbox-guest-additions-i
 sudo apt-get install virtualbox-dkms virtualbox-guest-dkms -y
 sudo adduser $USER vboxusers
 
-# VLC
-sudo snap install vlc
-
 #DBeaver
 sudo snap install dbeaver-ce
-clear
 
-# Serverless Framework
-# https://serverless.com
-sudo npm install serverless -g
-clear
-
-# Amazon CLI
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-unzip awscliv2.zip
-sudo ./aws/install
-aws --version
-
+#Drawio tool
 install_draw_io_tool() {
     read -p "Do you wish to install Draw io tool? (y/n) " DRAW_IO_INSTALL_BOOL
     if [ $DRAW_IO_INSTALL_BOOL == "y" ]
@@ -175,27 +231,31 @@ install_draw_io_tool() {
     fi
 }
 
-# Draw IO Tool
 install_draw_io_tool
+clear
 
 # OBS Studio
 sudo snap install obs-studio
+clear
 
 # Docker
+sudo apt install --fix-broken -y
 sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common -y
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository \
-   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-   $(lsb_release -cs) \
-   stable"
+"deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+$(lsb_release -cs) \
+stable"
 sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io -y
 sudo usermod -aG docker $(whoami)
 newgrp docker << GROUP_SUBSHELL
 
 # Docker compose
-sudo curl -L "https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)"\
- -o /usr/local/bin/docker-compose
+read -p "What version of docker-compose do you like to install? (y/n) " COMPOSE_VER
+sudo mkdir /usr/local/bin
+sudo curl -L "https://github.com/docker/compose/releases/download/$COMPOSE_VER/docker-compose-linux-amd64"\
+-o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 
 # Redis
@@ -206,39 +266,10 @@ sudo apt-get install redis-tools -y
 # MongoDB
 docker pull mongo
 docker run -it -p 27017:27017 --name mongo-service -d mongo
-sudo apt-get install mongodb-clients -y
-
-# MySQL
-docker run -it -p 3360:3360 --name mysql-service -e MYSQL_ROOT_PASSWORD=root -d mysql
-sudo apt-get install mysql-client -y
-# sudo apt-get install mysql-workbench -y
-
-# RabbitMQ
-# default_user: guest default_pass: guest
-#https://hub.docker.com/_/rabbitmq
-docker run -it -p 5672:5672 -p 15672:15672 -d --name rabbit-service rabbitmq:3-management
-
-#NATS Streaming
-#https://hub.docker.com/_/nats-streaming
-docker run -it -p 4222:4222 -p 8222:8222 -d --name nats-service nats-streaming
-
-#EMQ
-#https://hub.docker.com/r/emqx/emqx
-docker run -it --name emqx-service -p 18083:18083 -p 1883:1883 -d emqx/emqx:latest
-
-#Jupyter
-#docker run -it -d -p 8888:8888 --name jupyter jupyter/datascience-notebook
 
 # Postgres
-docker run --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=admin -d postgres:11.2
-
-# Keycloak
-docker run -p 9080:8080 -d --name keycloak jboss/keycloak
-docker exec keycloak /opt/jboss/keycloak/bin/add-user-keycloak.sh -u admin -p admin
-docker restart keycloak
-
-# Kafka
-docker run -it -p 9092:9092 -d --name kafka-service spotify/kafka
+read -p "What version of postgres do you like to install? (y/n) " POSTGRES_VER
+docker run --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=admin -d postgres:$POSTGRES_VER
 
 GROUP_SUBSHELL
 
