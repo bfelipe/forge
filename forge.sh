@@ -6,7 +6,7 @@ sudo apt-get upgrade -y
 sudo apt-get dist-upgrade -y
 sudo apt-get install build-essential -y
 
-# Misc
+# Few extra packages and tools 
 sudo apt-get install gnome-tweaks -y
 sudo apt-get install totem -y
 sudo apt-get install curl -y
@@ -17,46 +17,28 @@ sudo apt-get install net-tools -y
 sudo apt-get install tig -y
 sudo apt-get install apt-transport-https -y
 sudo apt-get install gnupg ca-certificates -y
+sudo apt-get install gnupg-agent software-properties-common -y
 sudo apt-get install lsb-core -y
 clear
 
 # Git
 sudo apt-get install git -y
-read -p "Please enter your name for git author: " GIT_USER_NAME
+read -p "Inform git author's name: " GIT_USER_NAME
 git config --global user.name "\"$GIT_USER_NAME"\"
-read -p "Please enter your git email: " GIT_EMAIL
+read -p "Inform author email: " GIT_EMAIL
 git config --global user.email "\"$GIT_EMAIL"\"
+# Generatin ssh key pair
+echo -e "\e[93mGenerating SSH Key...\e[0m"
+ssh-keygen -t ed25519 -C "$GIT_EMAIL"
+ssh-add /home/$(whoami)/.ssh/id_ed25519
 clear
 
-# Development Workspace
-set_dev_environment() {
-    read -p "Please enter the path directory where your projects will gonna live: " DEV_PATH
-    read -p "Please enter the path directory where your third party tools will be installed: " TOOLS_PATH
-}
 
-new_dev_env() {
-    set_dev_environment
-    echo "Your code will gonna be kept at: $DEV_PATH/dev"
-    echo "Your tools will gonna be kept at: $TOOLS_PATH/tools"
-    read -p "Do you wish to proceed with the creation of these directories (y/n) " DEV_ENV_CHOICE
-        if [ $DEV_ENV_CHOICE == "y" ]
-        then
-            mkdir $DEV_PATH/dev
-            mkdir $TOOLS_PATH/tools
-        elif [ $DEV_ENV_CHOICE == "n" ]
-        then
-            echo "Aborting dev env creation."
-        else
-            echo "Invalid option."
-            new_dev_env
-        fi    
-}
-
-new_dev_env
+read -p "Inform full path for your projects: " DEV_PATH
+echo "Creating projects directory at: $DEV_PATH/dev"
+echo "Creating tools directory at: $DEV_PATH/tools"
+mkdir $DEV_PATH/dev $DEV_PATH/tools
 clear
-
-# Microsoft Visual Code
-sudo snap install --classic code
 
 # Python Env and Tools
 install_python_tools() {
@@ -71,7 +53,6 @@ install_python_tools() {
         sed -i "\$a alias python='python3'" ~/.bashrc
         sed -i "\$a alias pip='pip3'" ~/.bashrc
         source ~/.bashrc
-        sudo snap install pycharm-community --classic
     elif [ $PYTHON_INSTALL_BOOL == "n" ]
     then
         echo "Aborting python tools installation."
@@ -82,45 +63,6 @@ install_python_tools() {
 }
 
 install_python_tools
-clear
-
-
-# Serverless Framework
-# https://serverless.com
-install_serverless() {
-    read -p "Do you wish to install serverless? (y/n) " SERVERLESS_INSTALL_BOOL
-    if [ $SERVERLESS_INSTALL_BOOL == "y" ]
-    then
-        sudo npm install serverless -g
-    elif [ $SERVERLESS_INSTALL_BOOL == "n" ]
-    then
-        echo "Aborting serverless installation."
-    else
-        echo "Invalid option."
-        install_serverless
-    fi
-}
-
-# Nodejs
-install_nodejs() {
-    read -p "Do you wish to install node js? (y/n) " NODE_INSTALL_BOOL
-    if [ $NODE_INSTALL_BOOL == "y" ]
-    then
-        mkdir $DEV_PATH/dev/js
-        read -p "Please enter the Nodejs version you wish to install: " NODE_VER
-        curl -sL https://deb.nodesource.com/setup_$NODE_VER.x | sudo -E bash -
-        sudo apt-get update && apt-get install -y nodejs
-        install_serverless
-    elif [ $NODE_INSTALL_BOOL == "n" ]
-    then
-        echo "Aborting node js installation."
-    else
-        echo "Invalid option."
-        install_nodejs
-    fi
-}
-
-install_nodejs
 clear
 
 # Java Env
@@ -139,10 +81,6 @@ install_java_env() {
         sdk list gradle
         read -p "Please enter the Gradle version you wish to install: " GRADLE_VER
         sdk install gradle $GRADLE_VER
-        sdk list kotlin
-        read -p "Please enter the Kotlin version you wish to install: " KOTLIN_VER
-        sdk install kotlin $KOTLIN_VER
-        sudo snap install intellij-idea-community --classic
     elif [ $JAVA_INSTALL_BOOL == "n" ]
     then
         echo "Aborting java installation."
@@ -156,23 +94,10 @@ install_java_env
 clear
 
 # C++ Env
-install_clang() {
-    read -p "Do you wish to install clang compiler? (y/n) " CLANG_INSTALL_BOOL
-    if [ $CLANG_INSTALL_BOOL == "y" ]
-    then
-        mkdir $DEV_PATH/dev/cpp
-        sudo snap install cmake --classic
-        sudo apt-get install clang -y
-    elif [ $CLANG_INSTALL_BOOL == "n" ]
-    then
-        echo "Aborting Clang installation."
-    else
-        echo "Invalid option."
-        install_clang
-    fi
-}
-
-install_clang
+echo "Installing clang compiler and cmake..."
+mkdir $DEV_PATH/dev/cpp $DEV_PATH/dev/c
+sudo snap install cmake --classic
+sudo apt-get install clang -y
 clear
 
 # Golang Env
@@ -186,6 +111,7 @@ install_go() {
         sudo tar -C /usr/local -xzf /tmp/go$GO_VER.linux-amd64.tar.gz
         sudo sed -i "\$a export PATH=\$PATH:/usr/local/go/bin" /etc/profile
         sudo rm /tmp/go$GO_VER.linux-amd64.tar.gz
+        $(go version)
     elif [ $GO_INSTALL_BOOL == "n" ]
     then
         echo "Aborting Go installation."
@@ -204,59 +130,34 @@ sudo dpkg -i /tmp/google-chrome-stable_current_amd64.deb
 sudo rm /tmp/google-chrome-stable_current_amd64.deb
 sudo apt install --fix-broken -y
 sudo apt autoremove -y
-
-# Postman
-sudo snap install postman
+clear
 
 # Virtual Box
 sudo apt-get install virtualbox virtualbox-ext-pack virtualbox-guest-additions-iso -y
-sudo apt-get install virtualbox-dkms virtualbox-guest-dkms -y
+sudo apt-get install virtualbox-dkms -y
 sudo adduser $USER vboxusers
 
-#DBeaver
+# Postman - DBeaver - Drawio tool - krita - code
+sudo snap install postman
 sudo snap install dbeaver-ce
-
-#Drawio tool
-install_draw_io_tool() {
-    read -p "Do you wish to install Draw io tool? (y/n) " DRAW_IO_INSTALL_BOOL
-    if [ $DRAW_IO_INSTALL_BOOL == "y" ]
-    then
-	sudo snap install drawio
-    elif [ $DRAW_IO_INSTALL_BOOL == "n" ]
-    then
-        echo "Aborting Draw IO installation."
-    else
-        echo "Invalid option."
-        install_draw_io_tool
-    fi
-}
-
-install_draw_io_tool
-clear
-
-# OBS Studio
-sudo snap install obs-studio
+sudo snap install drawio
+sudo snap install krita
+sudo snap install --classic code
 clear
 
 # Docker
+sudo apt update
 sudo apt install --fix-broken -y
-sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common -y
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-sudo add-apt-repository \
-"deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-$(lsb_release -cs) \
-stable"
-sudo apt-get update
-sudo apt-get install docker-ce docker-ce-cli containerd.io -y
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt update
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin -y
+sudo groupadd docker
 sudo usermod -aG docker $(whoami)
 newgrp docker << GROUP_SUBSHELL
-
-# Docker compose
-read -p "What version of docker-compose do you like to install? (y/n) " COMPOSE_VER
-sudo mkdir /usr/local/bin
-sudo curl -L "https://github.com/docker/compose/releases/download/$COMPOSE_VER/docker-compose-linux-amd64"\
--o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
 
 # Redis
 docker pull redis
@@ -268,8 +169,7 @@ docker pull mongo
 docker run -it -p 27017:27017 --name mongo-service -d mongo
 
 # Postgres
-read -p "What version of postgres do you like to install? (y/n) " POSTGRES_VER
-docker run --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=admin -d postgres:$POSTGRES_VER
+docker run --name postgres-service -p 5432:5432 -e POSTGRES_PASSWORD=admin -d postgres:latest
 
 GROUP_SUBSHELL
 

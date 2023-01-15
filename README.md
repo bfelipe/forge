@@ -1,82 +1,51 @@
 # Forge
 
-Forge was built with one thing in mind. Automate the boring process of setup a development environment with all tools and cool stuff I personally use.
-Feel free to change or use it as inspiration to build your ouwn.
+Forge is a terraform bash script made to simplify my personal development environment.
+All tools and packages you have listed here is the most basic for my daily use.
+Another version of this same script if private where I added some extra packages that maybe not all engineers would use on their daily basis. Feel free to use it to build your own recepi or maybe extend the current one with extra packages.
 
 ## Use
 
-Everything you need is to turn forge.sh script executable in your local machine.
-To do that you must type the follow commando in your terminal, inside the project directory:
+Your machine maybe not recognize forge.sh as executable. The way to fix that is giving permission by typing the follow command inside the script directory:
 
     chmod +x forge.sh
 
-Now you can run this script by:
+The script can be executed by as follow on terminal:
 
     ./forge.sh
 
-Some packages will gonna ask you to type your password. It is because it requires sudo to install them.
-
-***Important***: Do not execute this script with sudo. When necessary you gonna be ask to enter your password.
+***Important***: There is no necessity to execute this script using sudo mode. The script will ask your permission when required.
 
 ## What I gonna get?
 
-- Build essential packages
-- Gnome Tweaks
-- Totem
+- Essensial dist packages
+- Gnome tweaks
+- Totem audio player
 - Curl
 - Terminator
-- Transmission
-- OpenVPN
-- Net Tools
+- Transmission torrent client
+- Openvpn
+- Net-tools
 - Tig
-- Lsb Core
 - Git
-- Microsoft Visual Code
-- Python Pip
-- Python Venv
-- Python Setup Tools
-- Python APT
-- Pycharm Community
-- Nodejs & NPM
-- SDK Man
-- JDK
-- Gradle
-- Maven
-- Intellij Community
-- Clang
-- Clion
-- Cmake
-- Golang
-- Goland
-- Unity Engine
-- Dot Net Core SDK
-- Mono Development
-- Rider
-- Google Chrome
-- Proton VPN Cli
+- Git author configurer
+- SSH key generator
+- Python tools for python 3
+- Java maven and gradle via sdkman
+- Clang compiler and cmake
+- Golang compiler
+- Google chrome
 - Postman
-- Virtual box
-- VLC
-- Spotify
-- Amazon CLI
-- Dbeaver
-- Serverless framework
-- Draw IO
+- DBeaver
+- Drawio tool
+- Krita
+- Vs code
 - Docker
-- Docker compose
+- Docker compose Plugin
 - Docker::Redis
-- Redis tools
 - Docker::MongoDB
-- MongoDB clients
-- Docker::MySQL
-- MySQL Workbench
-- Docker::RabbitMQ
-- Docker::NATS Streaming
-- Docker::EMQX
-- Docker::Kibana
 - Docker::Jupyter
 - Docker::Postgres
-- Docker::Keycloak
 
 ## Author
 
