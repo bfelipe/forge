@@ -29,6 +29,8 @@ The script can be executed by as follow on terminal:
 - Tig
 - Git
 - Git author configurer
+- UFW Firewall
+- ClamAV Antivirus open source
 - SSH key generator
 - Python tools for python 3
 - Java maven and gradle via sdkman

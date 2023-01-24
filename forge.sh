@@ -34,6 +34,25 @@ ssh-add /home/$(whoami)/.ssh/id_ed25519
 clear
 
 
+# Setup Firewall
+# https://help.ubuntu.com/community/UFW
+sudo apt-get install gufw -y
+sudo ufw enable
+sudo ufw status verbose
+
+# Setup ClamAV Antivirus
+# https://help.ubuntu.com/community/ClamAV
+# https://askubuntu.com/questions/1292583/clamav-freshclam-did-not-working
+sudo apt-get install clamav -y
+sudo apt-get install clamav-daemon -y
+sudo apt-get install clamav-freshclam -y
+sudo apt-get install clamtk -y
+sudo freshclam
+sudo systemctl stop clamav-freshclam.service
+sudo freshclam
+sudo dpkg-reconfigure clamav-freshclam
+
+
 read -p "Inform full path for your projects: " DEV_PATH
 echo "Creating projects directory at: $DEV_PATH/dev"
 echo "Creating tools directory at: $DEV_PATH/tools"
