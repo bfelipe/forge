@@ -19,6 +19,7 @@ sudo apt-get install apt-transport-https -y
 sudo apt-get install gnupg ca-certificates -y
 sudo apt-get install gnupg-agent software-properties-common -y
 sudo apt-get install lsb-core -y
+sudo apt-get install vim -y
 clear
 
 # Git
@@ -40,20 +41,8 @@ sudo apt-get install gufw -y
 sudo ufw enable
 sudo ufw status verbose
 
-# Setup ClamAV Antivirus
-# https://help.ubuntu.com/community/ClamAV
-# https://askubuntu.com/questions/1292583/clamav-freshclam-did-not-working
-sudo apt-get install clamav -y
-sudo apt-get install clamav-daemon -y
-sudo apt-get install clamav-freshclam -y
-sudo apt-get install clamtk -y
-sudo freshclam
-sudo systemctl stop clamav-freshclam.service
-sudo freshclam
-sudo dpkg-reconfigure clamav-freshclam
 
-
-read -p "Inform full path for your projects: " DEV_PATH
+read -p "Inform full path for your projects without the last /: " DEV_PATH
 echo "Creating projects directory at: $DEV_PATH/dev"
 echo "Creating tools directory at: $DEV_PATH/tools"
 mkdir $DEV_PATH/dev $DEV_PATH/tools
@@ -156,10 +145,8 @@ sudo apt-get install virtualbox virtualbox-ext-pack virtualbox-guest-additions-i
 sudo apt-get install virtualbox-dkms -y
 sudo adduser $USER vboxusers
 
-# Postman - DBeaver - Drawio tool - krita - code
-sudo snap install postman
+# DBeaver - krita - code
 sudo snap install dbeaver-ce
-sudo snap install drawio
 sudo snap install krita
 sudo snap install --classic code
 clear
