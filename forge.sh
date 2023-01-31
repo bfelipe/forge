@@ -119,6 +119,7 @@ install_go() {
         sudo tar -C /usr/local -xzf /tmp/go$GO_VER.linux-amd64.tar.gz
         sudo sed -i "\$a export PATH=\$PATH:/usr/local/go/bin" /etc/profile
         sudo rm /tmp/go$GO_VER.linux-amd64.tar.gz
+        go env -w GOPATH=$DEV_PATH/dev/go
         $(go version)
     elif [ $GO_INSTALL_BOOL == "n" ]
     then
