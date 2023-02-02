@@ -115,12 +115,12 @@ install_go() {
     then
         mkdir $DEV_PATH/dev/go
         read -p "Please enter the Go version you wish to install: " GO_VER
-        wget -c "https://golang.google.cn/dl/go$GO_VER.linux-amd64.tar.gz" -P /tmp
+        wget -c "https://go.dev/dl/go$GO_VER.linux-amd64.tar.gz" -P /tmp
         sudo tar -C /usr/local -xzf /tmp/go$GO_VER.linux-amd64.tar.gz
         sudo sed -i "\$a export PATH=\$PATH:/usr/local/go/bin" /etc/profile
         sudo rm /tmp/go$GO_VER.linux-amd64.tar.gz
         go env -w GOPATH=$DEV_PATH/dev/go
-        $(go version)
+        go version
     elif [ $GO_INSTALL_BOOL == "n" ]
     then
         echo "Aborting Go installation."
