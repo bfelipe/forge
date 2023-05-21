@@ -8,9 +8,9 @@ sudo apt-get install build-essential -y
 
 # Few extra packages and tools 
 sudo apt-get install gnome-tweaks -y
+sudo apt-get install tmux -y
 sudo apt-get install totem -y
 sudo apt-get install curl -y
-sudo apt-get install terminator -y
 sudo apt-get install transmission transmission-gtk -y
 sudo apt-get install openvpn dialog -y
 sudo apt-get install net-tools -y
@@ -20,10 +20,19 @@ sudo apt-get install gnupg ca-certificates -y
 sudo apt-get install gnupg-agent software-properties-common -y
 sudo apt-get install lsb-core -y
 sudo apt-get install vim -y
+sudo apt-get install libfuse2 -y
 clear
 
+# Nvim
+curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+./nvim.appimage --appimage-extract
+./squashfs-root/AppRun --version
+sudo mv squashfs-root /
+sudo ln -s /squashfs-root/AppRun /usr/bin/nvim
+mkdir ~/.config/nvim
+
 # Git
-sudo apt-get install git -y
+#sudo apt-get install git -y
 read -p "Inform git author's name: " GIT_USER_NAME
 git config --global user.name "\"$GIT_USER_NAME"\"
 read -p "Inform author email: " GIT_EMAIL
@@ -44,8 +53,7 @@ sudo ufw status verbose
 
 read -p "Inform full path for your projects without the last /: " DEV_PATH
 echo "Creating projects directory at: $DEV_PATH/dev"
-echo "Creating tools directory at: $DEV_PATH/tools"
-mkdir $DEV_PATH/dev $DEV_PATH/tools
+mkdir $DEV_PATH/dev
 clear
 
 # Python Env and Tools
@@ -73,38 +81,9 @@ install_python_tools() {
 install_python_tools
 clear
 
-# Java Env
-install_java_env() {
-    read -p "Do you wish to install java environment? (y/n) " JAVA_INSTALL_BOOL
-    if [ $JAVA_INSTALL_BOOL == "y" ]
-    then
-        mkdir $DEV_PATH/dev/java
-        curl -s "https://get.sdkman.io" | bash
-        source "$HOME/.sdkman/bin/sdkman-init.sh"
-        sdk version
-        sdk list java
-        read -p "Please enter the JDK version you wish to install: " JDK_VER
-        sdk install java $JDK_VER
-        sdk install maven
-        sdk list gradle
-        read -p "Please enter the Gradle version you wish to install: " GRADLE_VER
-        sdk install gradle $GRADLE_VER
-    elif [ $JAVA_INSTALL_BOOL == "n" ]
-    then
-        echo "Aborting java installation."
-    else
-        echo "Invalid option."
-        install_java_env
-    fi
-}
-
-install_java_env
-clear
-
 # C++ Env
 echo "Installing clang compiler and cmake..."
 mkdir $DEV_PATH/dev/cpp $DEV_PATH/dev/c
-sudo snap install cmake --classic
 sudo apt-get install clang -y
 clear
 
@@ -113,7 +92,7 @@ install_go() {
     read -p "Do you wish to install go compiler? (y/n) " GO_INSTALL_BOOL
     if [ $GO_INSTALL_BOOL == "y" ]
     then
-        mkdir $DEV_PATH/dev/go
+        mkdir $DEV_PATH/dev/go $DEV_PATH/dev/go/src $DEV_PATH/dev/go/bin
         read -p "Please enter the Go version you wish to install: " GO_VER
         wget -c "https://go.dev/dl/go$GO_VER.linux-amd64.tar.gz" -P /tmp
         sudo tar -C /usr/local -xzf /tmp/go$GO_VER.linux-amd64.tar.gz
@@ -133,6 +112,26 @@ install_go() {
 install_go
 clear
 
+# Rust ENV
+install_rust() {
+    read -p "Do you wish to install rust tooling? (y/n)" RUST_INSTALL_BOOL
+    if [ $RUST_INSTALL_BOOL == "y" ]
+    then
+        mkdir $DEV_PATH/dev/rust
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+        rustc --version
+    elif [ $RUST_INSTALL_BOOL == "n" ]
+    then
+        echo "Aborting Rust installation."
+    else
+        echo "Invalid option."
+        install_rust
+    fi
+}
+
+install_rust
+clear
+
 # Google chrome
 wget -c https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -P /tmp
 sudo dpkg -i /tmp/google-chrome-stable_current_amd64.deb
@@ -146,10 +145,6 @@ sudo apt-get install virtualbox virtualbox-ext-pack virtualbox-guest-additions-i
 sudo apt-get install virtualbox-dkms -y
 sudo adduser $USER vboxusers
 
-# DBeaver - krita - code
-sudo snap install dbeaver-ce
-sudo snap install krita
-sudo snap install --classic code
 clear
 
 # Docker

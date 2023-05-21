@@ -18,28 +18,28 @@ The script can be executed by as follow on terminal:
 
 ## What I gonna get?
 
-- Essensial dist packages
-- Gnome tweaks
-- Totem audio player
-- Curl
-- Terminator
-- Transmission torrent client
-- Openvpn
-- Net-tools
-- Tig
-- Git
-- Git author configurer
-- UFW Firewall
-- SSH key generator
-- Python tools for python 3
-- Java maven and gradle via sdkman
-- Clang compiler and cmake
-- Golang compiler
+- OS Essentials packages
+- gnome-tweaks
+- totem
+- curl
+- transmission
+- openvpn
+- net-tools
+- tig
+- apt-transport-https
+- lbs-core
+- vim
+- libfuse2
+- nvim
+- git
+- Generating SSH key
+- ufw firewall
+- Python tools - pip, venv, setuptools
+- clang compiler
+- go compiler
+- rust tools
 - Google chrome
-- DBeaver
-- Krita
-- Vs code
-- Docker
+- Virtual box 
 - Docker compose Plugin
 - Docker::Redis
 - Docker::MongoDB
