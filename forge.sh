@@ -31,6 +31,9 @@ sudo mv squashfs-root /
 sudo ln -s /squashfs-root/AppRun /usr/bin/nvim
 mkdir ~/.config/nvim
 
+mkdir ~/.config/tmux
+cp tmux.conf ~/.config/tmux
+
 # Git
 #sudo apt-get install git -y
 read -p "Inform git author's name: " GIT_USER_NAME
