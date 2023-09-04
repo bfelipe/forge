@@ -97,14 +97,13 @@ install_go() {
     read -p "Do you wish to install go compiler? (y/n) " GO_INSTALL_BOOL
     if [ $GO_INSTALL_BOOL == "y" ]
     then
-        mkdir $DEV_PATH/dev/go $DEV_PATH/dev/go/src $DEV_PATH/dev/go/bin
+        mkdir $HOME/go $HOME/go/src $HOME/go/bin
         read -p "Please enter the Go version you wish to install: " GO_VER
         wget -c "https://go.dev/dl/go$GO_VER.linux-amd64.tar.gz" -P /tmp
         sudo tar -C /usr/local -xzf /tmp/go$GO_VER.linux-amd64.tar.gz
-        sudo sed -i "\$a export PATH=\$PATH:/usr/local/go/bin" /etc/profile
+	sudo sed -i "\$a export GOPATH=$HOME/go" /etc/profile
+	sudo sed -i "\$a export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin" /etc/profile
         sudo rm /tmp/go$GO_VER.linux-amd64.tar.gz
-	source /etc/profile
-        go env -w GOPATH=$DEV_PATH/dev/go
         go version
     elif [ $GO_INSTALL_BOOL == "n" ]
     then
