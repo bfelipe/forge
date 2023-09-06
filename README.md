@@ -37,7 +37,8 @@ The script can be executed by as follow on terminal:
 - Python tools - pip, venv, setuptools
 - clang compiler
 - go compiler
-- rust tools
+- Java compiler
+- Bazel build tool
 - Google chrome
 - Virtual box 
 - Docker compose Plugin
