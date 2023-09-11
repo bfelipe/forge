@@ -34,6 +34,11 @@ mkdir ~/.config/nvim
 
 mkdir ~/.config/tmux
 cp tmux.conf ~/.config/tmux
+mkdir ~/.tmux
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+source ~/.config/tmux/tmux.conf
+clear
+
 
 # Git
 #sudo apt-get install git -y
