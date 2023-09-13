@@ -21,6 +21,7 @@ sudo apt-get install gnupg-agent software-properties-common -y
 sudo apt-get install lsb-core -y
 sudo apt-get install vim -y
 sudo apt-get install libfuse2 -y
+sudo apt-get install xclip xsel -y
 clear
 
 # Nvim
