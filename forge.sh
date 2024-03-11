@@ -64,7 +64,7 @@ sudo ufw status verbose
 
 read -p "Inform full path for your projects without the last /: " DEV_PATH
 echo "Creating projects directory at: $DEV_PATH/dev"
-mkdir $DEV_PATH/dev
+mkdir $DEV_PATH/dev $DEV_PATH/dev/ops
 clear
 
 # Python Env and Tools
@@ -111,6 +111,7 @@ install_go() {
 	sudo sed -i "\$a export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin" /etc/profile
         sudo rm /tmp/go$GO_VER.linux-amd64.tar.gz
         go version
+	go install github.com/go-delve/delve/cmd/dlv@latest
     elif [ $GO_INSTALL_BOOL == "n" ]
     then
         echo "Aborting Go installation."
@@ -143,19 +144,10 @@ install_rust() {
 install_rust
 clear
 
-# Google chrome
-wget -c https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -P /tmp
-sudo dpkg -i /tmp/google-chrome-stable_current_amd64.deb
-sudo rm /tmp/google-chrome-stable_current_amd64.deb
-sudo apt install --fix-broken -y
-sudo apt autoremove -y
-clear
-
 # Virtual Box
 sudo apt-get install virtualbox virtualbox-ext-pack virtualbox-guest-additions-iso -y
 sudo apt-get install virtualbox-dkms -y
 sudo adduser $USER vboxusers
-
 clear
 
 # Docker
