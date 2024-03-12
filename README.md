@@ -28,23 +28,23 @@ The script can be executed by as follow on terminal:
 - tig
 - apt-transport-https
 - lbs-core
-- vim
 - libfuse2
 - nvim
+- nvim cauldron
+- tmux
 - git
 - Generating SSH key
 - ufw firewall
 - Python tools - pip, venv, setuptools
 - clang compiler
-- go compiler
-- Java compiler
-- Bazel build tool
-- Google chrome
+- Bazel
+- go compiler and debugger
+- GRPC tools
+- rust compiler
 - Virtual box 
 - Docker compose Plugin
 - Docker::Redis
 - Docker::MongoDB
-- Docker::Jupyter
 - Docker::Postgres
 
 ## Author

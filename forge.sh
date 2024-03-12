@@ -19,9 +19,9 @@ sudo apt-get install apt-transport-https -y
 sudo apt-get install gnupg ca-certificates -y
 sudo apt-get install gnupg-agent software-properties-common -y
 sudo apt-get install lsb-core -y
-sudo apt-get install vim -y
 sudo apt-get install libfuse2 -y
 sudo apt-get install xclip xsel -y
+sudo apt-get install git -y
 clear
 
 # Nvim
@@ -32,7 +32,14 @@ chmod +x nvim.appimage
 sudo mv squashfs-root /
 sudo ln -s /squashfs-root/AppRun /usr/bin/nvim
 mkdir ~/.config/nvim
+rm nvim.appimage && rm -m squashfs-root
 
+# Cauldron
+git clone https://gitlab.com/bfelipe/cauldron.git
+./cauldron/simple-install.sh
+clear
+
+# Tmux
 mkdir ~/.config/tmux
 cp tmux.conf ~/.config/tmux
 mkdir ~/.tmux
@@ -41,14 +48,13 @@ source ~/.config/tmux/tmux.conf
 clear
 
 
-# Git
-#sudo apt-get install git -y
+# Git Setup
 read -p "Inform git author's name: " GIT_USER_NAME
 git config --global user.name "\"$GIT_USER_NAME"\"
 read -p "Inform author email: " GIT_EMAIL
 git config --global user.email "\"$GIT_EMAIL"\"
 git config --global init.defaultBranch main
-# Generatin ssh key pair
+# Generating ssh key pair
 echo -e "\e[93mGenerating SSH Key...\e[0m"
 ssh-keygen -t ed25519 -C "$GIT_EMAIL"
 ssh-add /home/$(whoami)/.ssh/id_ed25519
@@ -61,6 +67,9 @@ sudo apt-get install gufw -y
 sudo ufw enable
 sudo ufw status verbose
 
+# Enable Airpod detection
+sudo sed -i '/#ControllerMode = dual/c\ControllerMode = bredr' /etc/bluetooth/main.conf
+sudo /etc/init.d/bluetooth restart
 
 read -p "Inform full path for your projects without the last /: " DEV_PATH
 echo "Creating projects directory at: $DEV_PATH/dev"
@@ -98,6 +107,29 @@ mkdir $DEV_PATH/dev/cpp $DEV_PATH/dev/c
 sudo apt-get install clang -y
 clear
 
+# Bazel Env
+install_bazel() {
+    read -p "Do you wish to install Bazel? (y/n) " BAZEL_INSTALL_BOOL
+    if [ $BAZEL_INSTALL_BOOL == "y" ]
+    then
+        sudo apt install apt-transport-https curl gnupg -y
+        curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor >bazel-archive-keyring.gpg
+        sudo mv bazel-archive-keyring.gpg /usr/share/keyrings
+        echo "deb [arch=amd64 signed-by=/usr/share/keyrings/bazel-archive-keyring.gpg] https://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
+        sudo apt update && sudo apt install bazel -y
+        bazel --version
+    elif [ $BAZEL_INSTALL_BOOL == "n" ]
+    then
+        echo "Aborting Bazel installation."
+    else
+        echo "Invalid option."
+        install_bazel
+    fi
+}
+
+install_bazel
+clear
+
 # Golang Env
 install_go() {
     read -p "Do you wish to install go compiler? (y/n) " GO_INSTALL_BOOL
@@ -107,11 +139,11 @@ install_go() {
         read -p "Please enter the Go version you wish to install: " GO_VER
         wget -c "https://go.dev/dl/go$GO_VER.linux-amd64.tar.gz" -P /tmp
         sudo tar -C /usr/local -xzf /tmp/go$GO_VER.linux-amd64.tar.gz
-	sudo sed -i "\$a export GOPATH=$HOME/go" /etc/profile
-	sudo sed -i "\$a export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin" /etc/profile
+        sudo sed -i "\$a export GOPATH=$HOME/go" /etc/profile
+        sudo sed -i "\$a export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin" /etc/profile
         sudo rm /tmp/go$GO_VER.linux-amd64.tar.gz
         go version
-	go install github.com/go-delve/delve/cmd/dlv@latest
+        go install github.com/go-delve/delve/cmd/dlv@latest
     elif [ $GO_INSTALL_BOOL == "n" ]
     then
         echo "Aborting Go installation."
@@ -123,6 +155,15 @@ install_go() {
 
 install_go
 clear
+
+# GRPC tools
+sudo apt install -y protobuf-compiler
+protoc --version
+go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest
+go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest
+go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest
 
 # Rust ENV
 install_rust() {
