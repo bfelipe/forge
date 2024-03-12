@@ -32,11 +32,12 @@ chmod +x nvim.appimage
 sudo mv squashfs-root /
 sudo ln -s /squashfs-root/AppRun /usr/bin/nvim
 mkdir ~/.config/nvim
-rm nvim.appimage && rm -m squashfs-root
+rm nvim.appimage && rm -r squashfs-root
 
 # Cauldron
 git clone https://gitlab.com/bfelipe/cauldron.git
-./cauldron/simple-install.sh
+source /cauldron/simple-install.sh
+sudo rm -r /cauldron
 clear
 
 # Tmux
@@ -142,7 +143,8 @@ install_go() {
         sudo sed -i "\$a export GOPATH=$HOME/go" /etc/profile
         sudo sed -i "\$a export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin" /etc/profile
         sudo rm /tmp/go$GO_VER.linux-amd64.tar.gz
-        go version
+	source /etc/profile
+	go version
         go install github.com/go-delve/delve/cmd/dlv@latest
     elif [ $GO_INSTALL_BOOL == "n" ]
     then
