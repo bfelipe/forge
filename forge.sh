@@ -220,26 +220,27 @@ clear
 
 install_misc() {
     # Discord
-    wget -c "https://discord.com/api/download?platform=linux&format=deb" -P /tmp
-    sudo dpkg -i /tmp/discord-*.deb
-    sudo rm /tmp/discord-*.deb
+    wget -c "https://discord.com/api/download?platform=linux&format=deb" -O /tmp/discord.deb
+    sudo dpkg -i /tmp/discord.deb
+    sudo rm /tmp/discord.deb
     # Steam
     wget -c "https://cdn.akamai.steamstatic.com/client/installer/steam.deb" -P /tmp
-    sudo dpkg -i /tmp/steam_*.deb
-    sudo rm /tmp/steam_*.deb
+    sudo dpkg -i /tmp/steam.deb
+    sudo rm /tmp/steam.deb
     # Krita
     sudo snap install krita
     # Google chrome
-    wget -c https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -P /tmp
+    wget -c "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb" -P /tmp
     sudo dpkg -i /tmp/google-chrome-stable_current_amd64.deb
     sudo rm /tmp/google-chrome-stable_current_amd64.deb
     sudo apt install --fix-broken -y
     sudo apt autoremove -y
     # Dbeaver
     sudo snap install dbeaver-ce
-    wget -c https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64 -P /tmp
-    sudo dpkg -i /tmp/code_*_amd64.deb
-    sudo rm /tmp/code_*_amd64.deb
+    # VS Code
+    wget -c "https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64" -O /tmp/vscode.deb
+    sudo dpkg -i /tmp/vscode.deb
+    sudo rm /tmp/vscode.deb
 }
 
 install_misc
