@@ -37,11 +37,21 @@ The script can be executed by as follow on terminal:
 - ufw firewall
 - Python tools - pip, venv, setuptools
 - clang compiler
+- cmake
+- make
 - Bazel
 - go compiler and debugger
 - GRPC tools
 - rust compiler
-- Virtual box 
+- java compiler
+- intellij for java and gradle
+- discord
+- steam
+- krita
+- Google Chrome
+- DBeaver
+- Visual Code
+- Virtual box
 - Docker compose Plugin
 - Docker::Redis
 - Docker::MongoDB

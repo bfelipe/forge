@@ -34,12 +34,6 @@ sudo ln -s /squashfs-root/AppRun /usr/bin/nvim
 mkdir ~/.config/nvim
 rm nvim.appimage && rm -r squashfs-root
 
-# Cauldron
-git clone https://gitlab.com/bfelipe/cauldron.git
-source /cauldron/simple-install.sh
-sudo rm -r /cauldron
-clear
-
 # Tmux
 mkdir ~/.config/tmux
 cp tmux.conf ~/.config/tmux
@@ -77,10 +71,17 @@ echo "Creating projects directory at: $DEV_PATH/dev"
 mkdir $DEV_PATH/dev $DEV_PATH/dev/ops
 clear
 
+echo  "Do you wish to install all essential dev tools?"
+read -p "You gonna be prompted to install each tool individually in case you select NO. (y/n) " SUPER_INSTALL
+
 # Python Env and Tools
 install_python_tools() {
-    read -p "Do you wish to install python additional tools? (y/n) " PYTHON_INSTALL_BOOL
-    if [ $PYTHON_INSTALL_BOOL == "y" ]
+    PYTHON_INSTALL_BOOL=""
+    if [ $SUPER_INSTALL == "n" ]
+    then
+        read -p "Do you wish to install python additional tools? (y/n) " PYTHON_INSTALL_BOOL
+    fi
+    if [ $PYTHON_INSTALL_BOOL == "y" ] || [ $SUPER_INSTALL == "y" ]
     then
         mkdir $DEV_PATH/dev/python
         sudo apt-get install python3-pip -y
@@ -105,36 +106,38 @@ clear
 # C++ Env
 echo "Installing clang compiler and cmake..."
 mkdir $DEV_PATH/dev/cpp $DEV_PATH/dev/c
-sudo apt-get install clang -y
+sudo apt-get install clang cmake make -y
 clear
 
 # Bazel Env
 install_bazel() {
-    read -p "Do you wish to install Bazel? (y/n) " BAZEL_INSTALL_BOOL
-    if [ $BAZEL_INSTALL_BOOL == "y" ]
-    then
-        sudo apt install apt-transport-https curl gnupg -y
-        curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor >bazel-archive-keyring.gpg
-        sudo mv bazel-archive-keyring.gpg /usr/share/keyrings
-        echo "deb [arch=amd64 signed-by=/usr/share/keyrings/bazel-archive-keyring.gpg] https://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
-        sudo apt update && sudo apt install bazel -y
-        bazel --version
-    elif [ $BAZEL_INSTALL_BOOL == "n" ]
-    then
-        echo "Aborting Bazel installation."
-    else
-        echo "Invalid option."
-        install_bazel
-    fi
+    sudo apt install apt-transport-https curl gnupg -y
+    curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor >bazel-archive-keyring.gpg
+    sudo mv bazel-archive-keyring.gpg /usr/share/keyrings
+    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/bazel-archive-keyring.gpg] https://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
+    sudo apt update && sudo apt install bazel -y
+    bazel --version
 }
 
-install_bazel
-clear
+# GRPC tools
+install_protobuf() {
+    sudo apt install -y protobuf-compiler
+    protoc --version
+    go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+    go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+    go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest
+    go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest
+    go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest
+}
 
 # Golang Env
 install_go() {
-    read -p "Do you wish to install go compiler? (y/n) " GO_INSTALL_BOOL
-    if [ $GO_INSTALL_BOOL == "y" ]
+    GO_INSTALL_BOOL=""
+    if [ $SUPER_INSTALL == "n" ]
+    then
+        read -p "Do you wish to install go compiler? (y/n) " GO_INSTALL_BOOL
+    fi
+    if [ $GO_INSTALL_BOOL == "y" ] || [ $SUPER_INSTALL == "y" ]
     then
         mkdir $HOME/go $HOME/go/src $HOME/go/bin
         read -p "Please enter the Go version you wish to install: " GO_VER
@@ -143,9 +146,11 @@ install_go() {
         sudo sed -i "\$a export GOPATH=$HOME/go" /etc/profile
         sudo sed -i "\$a export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin" /etc/profile
         sudo rm /tmp/go$GO_VER.linux-amd64.tar.gz
-	source /etc/profile
-	go version
+        source /etc/profile
+        go version
         go install github.com/go-delve/delve/cmd/dlv@latest
+        install_protobuf
+        install_bazel
     elif [ $GO_INSTALL_BOOL == "n" ]
     then
         echo "Aborting Go installation."
@@ -158,19 +163,14 @@ install_go() {
 install_go
 clear
 
-# GRPC tools
-sudo apt install -y protobuf-compiler
-protoc --version
-go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
-go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
-go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest
-go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest
-go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest
-
 # Rust ENV
 install_rust() {
-    read -p "Do you wish to install rust tooling? (y/n)" RUST_INSTALL_BOOL
-    if [ $RUST_INSTALL_BOOL == "y" ]
+    RUST_INSTALL_BOOL=""
+    if [ $SUPER_INSTALL == "n" ]
+    then
+        read -p "Do you wish to install rust tooling? (y/n)" RUST_INSTALL_BOOL
+    fi
+    if [ $RUST_INSTALL_BOOL == "y" ] || [ $SUPER_INSTALL == "y" ]
     then
         mkdir $DEV_PATH/dev/rust
         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
@@ -185,6 +185,64 @@ install_rust() {
 }
 
 install_rust
+clear
+
+install_java() {
+    JAVA_INSTALL_BOOL=""
+    if [ $SUPER_INSTALL == "n" ]
+    then
+        read -p "Do you wish to install Java tooling? (y/n)" JAVA_INSTALL_BOOL
+    fi
+    if [ $JAVA_INSTALL_BOOL == "y" ] || [ $SUPER_INSTALL == "y" ]
+    then
+        mkdir $DEV_PATH/dev/java
+        curl -s "https://get.sdkman.io" | bash
+        source "$HOME/.sdkman/bin/sdkman-init.sh"
+        sdk version
+        sdk list java
+        read -p "Please enter the JDK version you wish to install: " JDK_VER
+        sdk install java $JDK_VER
+        sdk list gradle
+        read -p "Please enter the Gradle version you wish to install: " GRADLE_VER
+        sdk install gradle $GRADLE_VER
+        sudo snap install intellij-idea-community --classic
+    elif [ $JAVA_INSTALL_BOOL == "n" ]
+    then
+        echo "Aborting Java installation."
+    else
+        echo "Invalid option."
+        install_java
+    fi
+}
+
+install_java
+clear
+
+install_misc() {
+    # Discord
+    wget -c "https://discord.com/api/download?platform=linux&format=deb" -P /tmp
+    sudo dpkg -i /tmp/discord-*.deb
+    sudo rm /tmp/discord-*.deb
+    # Steam
+    wget -c "https://cdn.akamai.steamstatic.com/client/installer/steam.deb" -P /tmp
+    sudo dpkg -i /tmp/steam_*.deb
+    sudo rm /tmp/steam_*.deb
+    # Krita
+    sudo snap install krita
+    # Google chrome
+    wget -c https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -P /tmp
+    sudo dpkg -i /tmp/google-chrome-stable_current_amd64.deb
+    sudo rm /tmp/google-chrome-stable_current_amd64.deb
+    sudo apt install --fix-broken -y
+    sudo apt autoremove -y
+    # Dbeaver
+    sudo snap install dbeaver-ce
+    wget -c https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64 -P /tmp
+    sudo dpkg -i /tmp/code_*_amd64.deb
+    sudo rm /tmp/code_*_amd64.deb
+}
+
+install_misc
 clear
 
 # Virtual Box
