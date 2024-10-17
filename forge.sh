@@ -55,6 +55,18 @@ ssh-keygen -t ed25519 -C "$GIT_EMAIL"
 ssh-add /home/$(whoami)/.ssh/id_ed25519
 clear
 
+# Enable Nvidia GPU as primary GPU card
+cat << EOF > nvidia-prime.conf
+Section "OutputClass"
+    Identifier "nvidia-prime"
+    MatchDriver "nvidia-drm"
+    Driver "nvidia"
+    Option "PrimaryGPU" "yes"
+EndSection
+EOF
+sudo mv nvidia-prime.conf /etc/X11/xorg.conf.d/
+sudo prime-select nvidia
+
 
 # Setup Firewall
 # https://help.ubuntu.com/community/UFW
