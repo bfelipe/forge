@@ -45,9 +45,9 @@ clear
 
 # Git Setup
 read -p "Inform git author's name: " GIT_USER_NAME
-git config --global user.name "\"$GIT_USER_NAME"\"
+git config --global user.name "$GIT_USER_NAME"
 read -p "Inform author email: " GIT_EMAIL
-git config --global user.email "\"$GIT_EMAIL"\"
+git config --global user.email "$GIT_EMAIL"
 git config --global init.defaultBranch main
 # Generating ssh key pair
 echo -e "\e[93mGenerating SSH Key...\e[0m"
