@@ -34,6 +34,8 @@ The script can be executed by as follow on terminal:
 - tmux
 - git
 - Generating SSH key
+- Enable GPU for linux
+- CUDA toolkit
 - ufw firewall
 - Python tools - pip, venv, setuptools
 - clang compiler
@@ -43,14 +45,19 @@ The script can be executed by as follow on terminal:
 - go compiler and debugger
 - GRPC tools
 - rust compiler
+- Modular Magic tool
+- Lua
+- .NET SDK
 - java compiler
 - intellij for java and gradle
 - discord
 - steam
 - krita
 - Google Chrome
+- Brave
 - DBeaver
 - Visual Code
+- LibreOffice
 - Virtual box
 - Docker compose Plugin
 - Docker::Redis

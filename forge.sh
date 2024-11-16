@@ -66,6 +66,15 @@ EndSection
 EOF
 sudo mv nvidia-prime.conf /etc/X11/xorg.conf.d/
 sudo prime-select nvidia
+# Install CUDA
+# https://developer.nvidia.com/cuda-toolkit
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-ubuntu2404.pin
+sudo mv cuda-ubuntu2404.pin /etc/apt/preferences.d/cuda-repository-pin-600
+wget https://developer.download.nvidia.com/compute/cuda/12.6.2/local_installers/cuda-repo-ubuntu2404-12-6-local_12.6.2-560.35.03-1_amd64.deb
+sudo dpkg -i cuda-repo-ubuntu2404-12-6-local_12.6.2-560.35.03-1_amd64.deb
+sudo cp /var/cuda-repo-ubuntu2404-12-6-local/cuda-*-keyring.gpg /usr/share/keyrings/
+sudo apt-get update
+sudo apt-get -y install cuda-toolkit-12-6
 
 
 # Setup Firewall
@@ -199,6 +208,77 @@ install_rust() {
 install_rust
 clear
 
+install_magic() {
+    MAGIC_INSTALL_BOOL=""
+    if [ $SUPER_INSTALL == "n" ]
+    then
+        read -p "Do you wish to install Modular Magic tooling? (y/n)" MAGIC_INSTALL_BOOL
+    fi
+    if [ $MAGIC_INSTALL_BOOL == "y" ] || [ $SUPER_INSTALL == "y" ]
+    then
+        curl -ssL https://magic.modular.com/8fa2f1c1-e9c2-4752-a66a-8996d85cfd7f | bash
+        source ~/.bashrc
+    elif [ $MAGIC_INSTALL_BOOL == "n" ]
+    then
+        echo "Aborting Modular Magic installation."
+    else
+        echo "Invalid option."
+        install_magic
+    fi
+    mkdir $DEV_PATH/dev/mojo   
+}
+
+install_magic
+clear
+
+install_lua() {
+    LUA_INSTALL_BOOL=""
+    if [ $SUPER_INSTALL == "n" ]
+    then
+        read -p "Do you wish to install Lua? (y/n)" LUA_INSTALL_BOOL
+    fi
+    if [ $LUA_INSTALL_BOOL == "y" ] || [ $SUPER_INSTALL == "y" ]
+    then
+        apt search lua5-
+        read -p "Please enter the Lua version number you wish to install: " LUA_VER
+        sudo apt-get install -y lua$LUA_VER
+    elif [ $LUA_INSTALL_BOOL == "n" ]
+    then
+        echo "Aborting Lua installation."
+    else
+        echo "Invalid option."
+        install_lua
+    fi
+    mkdir $DEV_PATH/dev/lua   
+}
+
+install_lua
+clear
+
+install_dotnet() {
+    DOTNET_INSTALL_BOOL=""
+    if [ $SUPER_INSTALL == "n" ]
+    then
+        read -p "Do you wish to install .NET SDK? (y/n)" DOTNET_INSTALL_BOOL
+    fi
+    if [ $DOTNET_INSTALL_BOOL == "y" ] || [ $SUPER_INSTALL == "y" ]
+    then
+        apt search dotnet-sdk-
+        read -p "Please enter the .NET SDK version number you wish to install: " NETSDK_VER
+        sudo apt-get install -y dotnet-sdk-$NETSDK_VER
+    elif [ $DOTNET_INSTALL_BOOL == "n" ]
+    then
+        echo "Aborting .NET SDK installation."
+    else
+        echo "Invalid option."
+        install_magic
+    fi
+    mkdir $DEV_PATH/dev/games
+}
+
+install_dotnet
+clear
+
 install_java() {
     JAVA_INSTALL_BOOL=""
     if [ $SUPER_INSTALL == "n" ]
@@ -247,12 +327,19 @@ install_misc() {
     sudo rm /tmp/google-chrome-stable_current_amd64.deb
     sudo apt install --fix-broken -y
     sudo apt autoremove -y
+    # Brave
+    sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
+    echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main"|sudo tee /etc/apt/sources.list.d/brave-browser-release.list
+    sudo apt update
+    sudo apt install brave-browser -y
     # Dbeaver
     sudo snap install dbeaver-ce
     # VS Code
     wget -c "https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64" -O /tmp/vscode.deb
     sudo dpkg -i /tmp/vscode.deb
     sudo rm /tmp/vscode.deb
+    # LibreOffice
+    sudo snap install libreoffice
 }
 
 install_misc
