@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# OS Essentials
+# OS Essentials and Nvidia repository
+sudo add-apt-repository ppa:graphics-drivers/ppa
 sudo apt-get update
 sudo apt-get upgrade -y
 sudo apt-get dist-upgrade -y
@@ -22,6 +23,7 @@ sudo apt-get install lsb-core -y
 sudo apt-get install libfuse2 -y
 sudo apt-get install xclip xsel -y
 sudo apt-get install git -y
+sudo apt install intel-gpu-tools -y
 clear
 
 # Nvim
@@ -55,31 +57,29 @@ ssh-keygen -t ed25519 -C "$GIT_EMAIL"
 ssh-add /home/$(whoami)/.ssh/id_ed25519
 clear
 
-# Nvidia repository
-# allow update manually to latest drive versions by Software updater
-sudo add-apt-repository ppa:graphics-drivers/ppa
-sudo apt-get update
-# Enable Nvidia GPU as primary GPU card
+# Enable Nvidia GPU as primary GPU card (optional)
+# to set nvidia as primary gpu remove all # tokens from withing EOF
+# and use prime-select nvidia instead of on-demand
 cat << EOF > nvidia-prime.conf
-Section "OutputClass"
-    Identifier "nvidia-prime"
-    MatchDriver "nvidia-drm"
-    Driver "nvidia"
-    Option "PrimaryGPU" "yes"
-EndSection
+#Section "OutputClass"
+#    Identifier "nvidia-prime"
+#    MatchDriver "nvidia-drm"
+#    Driver "nvidia"
+#    Option "PrimaryGPU" "yes"
+#EndSection
 EOF
 sudo mv nvidia-prime.conf /etc/X11/xorg.conf.d/
-sudo prime-select nvidia
-# Install CUDA
+# sudo prime-select nvidia
+sudo prime-select on-demand
+# Install CUDA (optional)
 # https://developer.nvidia.com/cuda-toolkit
-wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-ubuntu2404.pin
-sudo mv cuda-ubuntu2404.pin /etc/apt/preferences.d/cuda-repository-pin-600
-wget https://developer.download.nvidia.com/compute/cuda/12.6.2/local_installers/cuda-repo-ubuntu2404-12-6-local_12.6.2-560.35.03-1_amd64.deb
-sudo dpkg -i cuda-repo-ubuntu2404-12-6-local_12.6.2-560.35.03-1_amd64.deb
-sudo cp /var/cuda-repo-ubuntu2404-12-6-local/cuda-*-keyring.gpg /usr/share/keyrings/
-sudo apt-get update
-sudo apt-get -y install cuda-toolkit-12-6
-
+# wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-ubuntu2404.pin
+# sudo mv cuda-ubuntu2404.pin /etc/apt/preferences.d/cuda-repository-pin-600
+# wget https://developer.download.nvidia.com/compute/cuda/12.6.2/local_installers/cuda-repo-ubuntu2404-12-6-local_12.6.2-560.35.03-1_amd64.deb
+# sudo dpkg -i cuda-repo-ubuntu2404-12-6-local_12.6.2-560.35.03-1_amd64.deb
+# sudo cp /var/cuda-repo-ubuntu2404-12-6-local/cuda-*-keyring.gpg /usr/share/keyrings/
+# sudo apt-get update
+# sudo apt-get -y install cuda-toolkit-12-6
 
 # Setup Firewall
 # https://help.ubuntu.com/community/UFW
