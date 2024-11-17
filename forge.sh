@@ -55,6 +55,10 @@ ssh-keygen -t ed25519 -C "$GIT_EMAIL"
 ssh-add /home/$(whoami)/.ssh/id_ed25519
 clear
 
+# Nvidia repository
+# allow update manually to latest drive versions by Software updater
+sudo add-apt-repository ppa:graphics-drivers/ppa
+sudo apt-get update
 # Enable Nvidia GPU as primary GPU card
 cat << EOF > nvidia-prime.conf
 Section "OutputClass"
