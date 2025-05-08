@@ -386,6 +386,10 @@ docker run -it -p 27017:27017 --name mongo-service -d mongo
 # Postgres
 docker run --name postgres-service -p 5432:5432 -e POSTGRES_PASSWORD=admin -d postgres:latest
 
+# Cassandra
+docker run --name cassandra-service -p 9042:9042 -d cassandra:latest
+sudo snap install cqlsh
+
 GROUP_SUBSHELL
 
 # Colour output schema
